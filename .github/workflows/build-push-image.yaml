@@ -29,13 +29,13 @@ jobs:
     - name: Build and Push Docker image
       run: |
         cd ToDoApp
-        docker build -t larsappel/todoapp:${{ github.sha }} .
-        docker push larsappel/todoapp:${{ github.sha }}
+        docker build -t ${{ secrets.DOCKERHUBUSER }}/todoapp:${{ github.sha }} .
+        docker push ${{ secrets.DOCKERHUBUSER }}/todoapp:${{ github.sha }}
 
     # Update the Kubernetes manifests to use the new image tag
     - name: Update Kubernetes manifests
       run: |
-        sed -i 's|larsappel/todoapp:.*|larsappel/todoapp:${{ github.sha }}|' ToDoApp-K8S-Manifests/todo-deployment.yaml
+        sed -i 's|${{ secrets.DOCKERHUBUSER }}/todoapp:.*|${{ secrets.DOCKERHUBUSER }}/todoapp:${{ github.sha }}|' ToDoApp-K8S-Manifests/todo-deployment.yaml
 
     # Commit and push the updated manifests back to the repository
     - name: Commit and push updated manifests
